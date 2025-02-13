@@ -52,8 +52,8 @@ for index, acc in enumerate(files_sorted['Accession']):
     seqQscorer_fp = '%s%s.fastq.gz'%(seqQscorer_fastq, acc)
     if os.path.exists(seqQscorer_fp):
         print('\tCopy from seqQscorer!')
-        print(fp)
-        cp = 'cp %s ./fastq/'%(fp)
+        print(seqQscorer_fp)
+        cp = 'cp %s ./fastq/'%(seqQscorer_fp)
         os.system(cp)
         continue
 
