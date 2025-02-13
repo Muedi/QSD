@@ -61,7 +61,7 @@ for index, acc in enumerate(files_sorted['Accession']):
     wget =  'wget https://www.encodeproject.org' + url_map[acc]
     wget += ' -P ./fastq/'
     print(wget)
-    #os.system(wget)
+    os.system(wget)
 
     print()
 
