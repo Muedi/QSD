@@ -32,8 +32,8 @@ for index, acc in enumerate(files_sorted['Accession']):
     peID = peID_map[acc]
     print(index, acc, assay_map[acc], orga_map[acc], peID)
     
-    if index % 4 == not_skip:
-        print('\tSkip because of "skip == %d"!'%(not_skip))
+    if index % 4 != not_skip:
+        print('\tSkip because of "modulo(index) != %d"'%(not_skip))
         continue
     
     if peID == 2.0:
