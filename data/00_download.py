@@ -7,7 +7,7 @@ seqQscorer_fastq = '/lustre/project/m2_jgu-cbdm/salbrec/seqQscorer_proj/data/raw
 files = pd.read_csv('./meta/files_essential.tsv', sep='\t')
 print(files)
 
-odd_or_not = int(argv[1])
+not_skip = int(argv[1])
 
 files['organism'] = ['NaN' if type(donor) != str else donor.split('/')[1].split('-')[0] for donor in files['Donor']]
 
@@ -32,8 +32,8 @@ for index, acc in enumerate(files_sorted['Accession']):
     peID = peID_map[acc]
     print(index, acc, assay_map[acc], orga_map[acc], peID)
     
-    if index % 2 == odd_or_not:
-        print('\tSkip because of "odd_or_not"!')
+    if index % 4 == not_skip:
+        print('\tSkip because of "skip == %d"!'%(not_skip))
         continue
     
     if peID == 2.0:
