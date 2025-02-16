@@ -8,6 +8,7 @@ files = pd.read_csv('./meta/files_essential.tsv', sep='\t')
 print(files)
 
 not_skip = int(argv[1])
+testing = '-test' in argv
 
 files['organism'] = ['NaN' if type(donor) != str else donor.split('/')[1].split('-')[0] for donor in files['Donor']]
 
@@ -28,30 +29,36 @@ files['prio2'] = [ assay_pmap.get(assay,99) for assay in files['Assay term name'
 files_sorted = files.copy()
 files_sorted.sort_values(by=['prio1','prio2'],ignore_index=True,inplace=True)
 
+accessions_with_comma = []
 for index, acc in enumerate(files_sorted['Accession']):
     peID = peID_map[acc]
     print(index, acc, assay_map[acc], orga_map[acc], peID)
+    if type(peID) == str:
+        if ',' in peID:
+            accessions_with_comma.append(acc)
+            continue
+        peID = int(float(peID))
     
     if index % 4 != not_skip:
-        print('\tSkip because of "modulo(index) != %d"'%(not_skip))
+        print('\tSkip because of "modulo(index) != %d"\n'%(not_skip))
         continue
     
-    if peID == 2.0:
-        print('\tSkip because the paired-end identifier is', peID)
+    if peID == 2:
+        print('\tSkip because the paired-end identifier is', peID, '\n')
         continue
 
     if status_map[acc] == 'archived':
-        print('\tSkip because it is archived', peID)
+        print('\tSkip because it is archived\n')
         continue
     
     fp = './fastq/%s.fastq.gz'%(acc)
     if os.path.exists(fp):
-        print('\tSkip because it does exist already:', fp)
+        print('\tSkip because it exists already: %s\n'%(fp))
         continue
 
     seqQscorer_fp = '%s%s.fastq.gz'%(seqQscorer_fastq, acc)
     if os.path.exists(seqQscorer_fp):
-        print('\tCopy from seqQscorer!')
+        print('\tCopy from seqQscorer!\n')
         print(seqQscorer_fp)
         cp = 'cp %s ./fastq/'%(seqQscorer_fp)
         os.system(cp)
@@ -61,9 +68,15 @@ for index, acc in enumerate(files_sorted['Accession']):
     wget =  'wget https://www.encodeproject.org' + url_map[acc]
     wget += ' -P ./fastq/'
     print(wget)
-    os.system(wget)
-
     print()
+    if not testing:
+        os.system(wget)
+    if testing and index > 3000:
+       break
+
+print('For these accessions, the PE identifier could not be defined:')
+for acc in accessions_with_comma:
+    print(acc)
 
 
 
