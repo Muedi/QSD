@@ -1,2 +1,5 @@
 data/fastq/
+data/features/
+data/utils/__pycache__/
 data/utils/genomes/
+
