@@ -15,7 +15,9 @@ from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 def create_ann(input_dimension):
     """
     This function describes the archictecture and the compiling process of our artifical neural network. 
-
+    
+    Parameters
+    -----------------
     input_dimension: number of features
     """
 
