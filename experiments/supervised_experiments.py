@@ -2,8 +2,6 @@ import os
 import utils
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1" # tensorflow only sees CPU (disable use of GPU)
 import tensorflow as tf
