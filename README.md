@@ -18,5 +18,8 @@ pip install -r requirements.txt
 
 ## Experimental Results
 After running the scripts "unsupervised_experiments.py" and "supervised_experiments.py", you will receive the following results: 
+ 
+<center>
+     ![image](https://github.com/user-attachments/assets/8333b844-f5c0-4bd0-a647-ea5754065c9d)
+ </center>
 
-![image](https://github.com/user-attachments/assets/6a14a1de-5e9c-4844-bbd6-5b691412aafa)
