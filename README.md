@@ -16,3 +16,7 @@ pip install -r requirements.txt
 
 >📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
 
+## Experimental Results
+After running the scripts "unsupervised_experiments.py" and "supervised_experiments.py", you will receive the following results: 
+
+![image](https://github.com/user-attachments/assets/6a14a1de-5e9c-4844-bbd6-5b691412aafa)
