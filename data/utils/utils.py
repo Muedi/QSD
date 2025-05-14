@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import os
 import subprocess
 
@@ -88,6 +87,13 @@ def get_TSS_feature_names():
     names += [ 'TSS_p%d'%d for d in [500, 1500, 2500, 3500, 4500] ]
     return names
 
+# format the TSS feature names correctly
+def get_TSS_features(fp):
+    table = pd.read_csv(fp, sep='\t')
+    table['name'] = ['TSS_'+str(tsd) if '-' in str(tsd) else 'TSS_p'+str(tsd) for tsd in table['tss_dist']]
+    table['name'] = [name.replace('-','m') for name in table['name']]
+    return dict(zip(table['name'], table['perc']))
+
 def get_FastQC_features(fp):
     """
     Reads FastQC report summary and returns the feature values in a dict.
@@ -138,6 +144,16 @@ def read_Bowtie_stats(fp):
     return stats, lines
 
 def read_blocklist(bl_file):
+    """
+    Reads in a blocklist file and uses a certain format that allows for 
+    using the regions efficiently in read counting procedure
+
+    Args:
+        bl_file (str): File path to the blocklist regions file.
+
+    Returns:
+        dict: dictionary containing lists of regions for each chromosome used as key
+    """
     df_blocklist = pd.read_csv(bl_file, sep='\t', names=['chr','start','end','ID'])
     blocklist = {}
     for index, row in df_blocklist.iterrows():
@@ -148,19 +164,30 @@ def read_blocklist(bl_file):
             bl_type_map[bl_type], row['ID']) )
     return blocklist
 
-def count_reads_in_regions(summits, regions, chrom_size_map, reads_total, reads_mapped):
-
-    total = reads_total / 1e6
-    mapped = reads_mapped / 1e6
-
-    # start the binning and count summits within the bin ranges
+def count_reads_in_regions(summits, regions, chrom_size_map):
+    """
+    For each region, counting the summits within the region. 
+    An overlap is only given if the summit is in the region, hence, 
+    if more than half of the read overlaps with the blocklist region
+    Args:
+        summits (dict): dictionary with chromosome as key. The values
+                        are lists of summits for the chromosome. The summits 
+                        describe the center of the reads in this application.
+        regions (dict): dictionary with chromosome as key. The values 
+                        are lists of blocklist regions. 
+        chrom_size_map (dict): dictionary with chromosome as key. The values
+                                describe the chromosome length.
+    Returns:
+        pd.DataFrame: 
+    """
     bincov = {'binID':[], 'chr':[], 'start':[], 'end':[], 'count':[],
-        'cRelTotal':[], 'cRelMapped':[], 'blID':[], 'blType':[]}
+        'blID':[], 'blType':[]}
 
     for chrom in chrom_size_map:
         if not chrom in summits or not chrom in regions:
             continue
 
+        # sort summits to allow for an early exit when counting the summits in the regions
         chr_summits, rp = sorted(summits[chrom]), 0
 
         for binID, reg_chrom, reg_start, reg_end, reg_type, reg_ID in regions[chrom]:
@@ -182,8 +209,6 @@ def count_reads_in_regions(summits, regions, chrom_size_map, reads_total, reads_
                 bincov['start'].append( reg_start )
                 bincov['end'].append( reg_end )
                 bincov['count'].append( count )
-                bincov['cRelTotal'].append( count/total )
-                bincov['cRelMapped'].append( count/mapped )
                 bincov['blType'].append( reg_type )
                 bincov['blID'].append( reg_ID )
                     

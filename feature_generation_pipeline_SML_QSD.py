@@ -32,7 +32,7 @@ n_cores = 1
 
 print('Starting to generate features for sample %s - the organism is %s'%(accession, organism))
 
-file_paths = utils.get_feature_file_paths(accession, './data/')
+file_paths = utils.get_feature_file_paths(accession, data_dir)
 
 # these are the genome builts for the Bowtie2 mapper
 # such genomes are large and are expected to be built by the user
@@ -103,17 +103,21 @@ if not exists(file_paths['MAP_bed_unsorted']):
 	if not simulate:
 		system(bamtobed)
 
+# check if file exists, then check if it has the right content 
+# by comparing the number of reads in the BED file (number of lines)
+# with the expected number of mapped reads from the mapping statistics 
 n_mapped_reads = map_stats['1time'] + map_stats['multi']
-if not exists(file_paths['MAP_bed_unsorted']):
-	print('Failed to convert BAM to BED')
-	exit(1)
-else:
+if exists(file_paths['MAP_bed_unsorted']):
 	bed_lines = utils.get_file_length(file_paths['MAP_bed_unsorted'])
 	if bed_lines != n_mapped_reads:
 		system('rm ' + file_paths['MAP_bed_unsorted'])
 		print('BED file is not complete. Expected are %d reads, has %d.'%(n_mapped_reads, bed_lines))
 		exit(1)
+else:
+	print('Failed to convert BAM to BED')
+	exit(1)
 
+# create and sort the 
 if not exists(file_paths['MAP_bed1M']):
 	shuf = 'shuf -n 1000000 %s > %s'%(file_paths['MAP_bed_unsorted'], file_paths['MAP_bed1M_unsorted'])
 	print('Sample 1M reads from full BED:', shuf)
@@ -123,15 +127,20 @@ if not exists(file_paths['MAP_bed1M']):
 	print('Sort downsampled BED:', bedsort)
 	if not simulate:
 		system(bedsort)
+		# after the subsampled BEd has been sorted, the unsorted BED is not kept
+		system('rm ' + file_paths['MAP_bed1M_unsorted'])
 
 if not exists(file_paths['MAP_bed1M']):
 	print('Failed to create the subsampled BED file.')
 	exit(1)
 
+# check if the subsamples BED file has been created successfully
+# this is done by comparing the number of reads (lines in the BED)
+# with the expected number of either 1M reads or the number of mapped reads
 bed_lines = utils.get_file_length(file_paths['MAP_bed1M'])
 if bed_lines != n_mapped_reads and bed_lines != 1000000:
 	system('rm ' + file_paths['MAP_bed1M'])
-	print('oneM BED has the unexpected content with %d lines'%(wc_bed))
+	print('oneM BED has the unexpected content with %d lines'%(bed_lines))
 	exit(1)
 
 # ==== Run ChIPseeker to derive the LOC features ====
@@ -146,6 +155,7 @@ except:
 	if not simulate: 
 		system(chipseeker)
 
+# double check if the LOC features were created successfully
 try:
 	feats_LOC = pd.read_csv(file_paths['LOC'], sep='\t')
 except:
@@ -164,6 +174,7 @@ except:
 	if not simulate:
 		system(chippeakanno)
 
+# double check if the TSS features were created successfully
 try:
 	feats_TSS = pd.read_csv(file_paths['TSS'], sep='\t')
 except:
@@ -180,7 +191,7 @@ chrom_sizes = pd.read_csv(fp_sizes, sep='\t', names=['chr', 'size'])
 chrom_sizes = chrom_sizes.loc[ [not c in ['chrX', 'chrY'] for c in chrom_sizes['chr']] ]
 chrom_size_map = dict(zip(chrom_sizes['chr'], chrom_sizes['size']))
 
-# then read in the full BED file. 
+# the summits describe the center of the mapped read locations in the full BED
 summits = dict((chrom, []) for chrom in chrom_size_map.keys())
 with open(file_paths['MAP_bed_unsorted'], 'r') as f:
     for line in f:
@@ -190,16 +201,19 @@ with open(file_paths['MAP_bed_unsorted'], 'r') as f:
             summits[chrom].append( int((int(line[1])+int(line[2]))/2.0) )
 
 # count the reads overlapping with the blocklisted regions
+# using the summits, a overlap of a read is only given if the summit is within the blocklist
+# region. hence, if more than half of the read overlaps with the blocklist region
 for ratio in ['0_25','0_50']:
 	try:
 		bl_file = '%sutils/blocklists/liftover/min_ratio_%s/%s.bed'%(data_dir, ratio, assembly[organism])
 		blocklist = utils.read_blocklist(bl_file)
-		count_BL_reg = utils.count_reads_in_regions(summits, blocklist, chrom_size_map, map_stats['total'], n_mapped_reads)
+		count_BL_reg = utils.count_reads_in_regions(summits, blocklist, chrom_size_map)
 		count_BL_reg.to_csv(file_paths['05_BLF_%s'%(ratio)], index=False)
 	except:
 		print('Failed to create the blocklist features for ratio', ratio)
 		exit(1)
 
+print('Successfully processed the sample:', accession)
 exit(0)
 
 
