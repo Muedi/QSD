@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import subprocess
+from copy import deepcopy
 
 fastqc_values = {'FAIL':0, 'WARN':1, 'PASS':2}
 bl_type_map = {'LM':1, 'HSR':2}
@@ -77,7 +78,7 @@ def get_FastQC_feature_names():
 # returns the LOC feature names
 def get_LOC_feature_names():
     names = ['Promoter', '5_UTR', '3_UTR', '1st_Exon', 'Other_Exon', 
-             '1st_Intron', 'Other_Intron', 'Downstream', 'Distal_Intergenic']
+             '1st_Intron', 'Other_Intron', 'Downstream_leq300', 'Distal_Intergenic']
     names = ['LOC_' + n for n in names]
     return names
 
@@ -93,6 +94,14 @@ def get_TSS_features(fp):
     table['name'] = ['TSS_'+str(tsd) if '-' in str(tsd) else 'TSS_p'+str(tsd) for tsd in table['tss_dist']]
     table['name'] = [name.replace('-','m') for name in table['name']]
     return dict(zip(table['name'], table['perc']))
+
+# format the LOC feature names correctly
+def get_LOC_features(fp):
+    table = pd.read_csv(fp, sep='\t')
+    table['name'] = [ feat.replace("'","").replace(' ','_') for feat in table['Feature'] ]
+    table['name'] = [ feat.replace("(<=","leq").replace(')','') for feat in table['name'] ]
+    table['name'] = [ 'LOC_' + feat for feat in table['name'] ]
+    return dict(zip(table['name'], table['Frequency']))
 
 def get_FastQC_features(fp):
     """
@@ -187,30 +196,20 @@ def count_reads_in_regions(summits, regions, chrom_size_map):
         if not chrom in summits or not chrom in regions:
             continue
 
-        # sort summits to allow for an early exit when counting the summits in the regions
-        chr_summits, rp = sorted(summits[chrom]), 0
-
         for binID, reg_chrom, reg_start, reg_end, reg_type, reg_ID in regions[chrom]:
             if chrom != reg_chrom:
                 print('!!! Something is WRONG here: ', reg_chrom, chrom)
                 return None
-            count = 0
-            if rp < len(chr_summits):
-                while chr_summits[rp] < reg_end:
-                    if chr_summits[rp] > reg_start:
-                        count += 1
-                    rp += 1
-                    if rp >= len(chr_summits):
-                        break
-
+            
+            count = len(list(filter( lambda x: x > reg_start and x < reg_end, summits[chrom] )))
+            
             if count != 0:
-                bincov['binID'].append( binID )
-                bincov['chr'].append( reg_chrom )
-                bincov['start'].append( reg_start )
-                bincov['end'].append( reg_end )
-                bincov['count'].append( count )
-                bincov['blType'].append( reg_type )
+                bincov['binID'].append( binID ); bincov['chr'].append( reg_chrom );
+                bincov['start'].append( reg_start ); bincov['end'].append( reg_end );
+                bincov['count'].append( count ); bincov['blType'].append( reg_type );
                 bincov['blID'].append( reg_ID )
                     
     return pd.DataFrame(bincov)
+
+
 

@@ -20,12 +20,14 @@ samples_meta = pd.read_csv('%smeta/fastq_samples_meta.csv'%(data_dir))
 samples_meta['Organism'] = [donor.split('/')[1].split('-')[0] for donor in samples_meta['Donor']]
 data_dir = './data/'
 
+# collect the feature names for the different sets
 feat_names_RAW = utils.get_FastQC_feature_names()
 feat_names_RAW.remove('Basic_Statistics')
 feat_names_MAP = ['0times', '1time' , 'multi', 'overall']
 feat_names_LOC = utils.get_LOC_feature_names()
 feat_names_TSS = utils.get_TSS_feature_names()
 
+# prepare lists that are considered as columns for the final datasets
 s_cols  = [ 'RAW_'+fn for fn in feat_names_RAW ]
 s_cols += [ 'MAP_'+fn for fn in feat_names_MAP ]
 s_cols += feat_names_LOC
@@ -41,7 +43,10 @@ for ratio in liftOver_ratios:
     ml_values[ratio] = []
 
 accessions = []
-for index, accession in enumerate(samples_meta['Accession']):
+temp = samples_meta['Accession']
+temp = ['ENCFF001NAO', 'ENCFF001NFW']
+
+for index, accession in enumerate(temp):
     file_paths = utils.get_feature_file_paths(accession, data_dir)
 
     # get the values for the S-QSD features
@@ -68,8 +73,8 @@ for index, accession in enumerate(samples_meta['Accession']):
     
     # read out the ChIPseeker table to receive the LOC features
     try:
-        table = pd.read_csv(file_paths['LOC'], sep='\t')
-        loc_vals = list(table['Frequency'])
+        value_map = utils.get_LOC_features(file_paths['LOC'])
+        loc_vals = [ value_map.get(fn, np.nan) for fn in feat_names_LOC ]
     except:
         print("Couldn't get the LOC features for %s"%(accession))
         print('Therefore, sample %s is skipped entirely.'%(accession))
@@ -87,21 +92,18 @@ for index, accession in enumerate(samples_meta['Accession']):
     s_values.append( raw_vals + map_vals + loc_vals + tss_vals )
 
     # get the values for the two different blocklists (M/L-QSD)
-    successful = True
-    for ratio in liftOver_ratios:
-        try:
-            counts_fp = '%sfeatures/05_BLF/ratio_%s/%s.tsv'%(data_dir, ratio, accession)
-            counts = pd.read_csv(counts_fp)
-            count_map = dict(zip(counts['blID'], counts['count']))
+    try:
+        counts_fp = '%sfeatures/05_BLF/ratio_0_25/%s.tsv'%(data_dir, accession)
+        counts = pd.read_csv(counts_fp)
+        count_map = dict(zip(counts['blID'], counts['count']))
+        for ratio in liftOver_ratios:
             row = [ count_map.get(col,0.0) for col in ml_cols[ratio] ]
             ml_values[ratio].append(row)
-        except:
-            print("Couldn't get the blocklist (%s) features for %s"%(ratio, accession))
-            print('Therefore, sample %s is skipped entirely.'%(accession))
-            successful = False
-    if not successful:
+    except:
+        print("Couldn't get the blocklist (%s) features for %s"%(ratio, accession))
+        print('Therefore, sample %s is skipped entirely.'%(accession))
         continue
-        
+    
     accessions.append(accession)
 
 # create the S-QSD dataframe and save to CSV file

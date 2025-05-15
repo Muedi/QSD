@@ -203,7 +203,9 @@ with open(file_paths['MAP_bed_unsorted'], 'r') as f:
 # count the reads overlapping with the blocklisted regions
 # using the summits, a overlap of a read is only given if the summit is within the blocklist
 # region. hence, if more than half of the read overlaps with the blocklist region
-for ratio in ['0_25','0_50']:
+# we only do this for the L-QSD blocklist create with the cutoff 0.25 for the
+# "Minimum ratio of bases that must remap" as it includes the blocklist for the M-QSD.
+for ratio in ['0_25']:
 	try:
 		bl_file = '%sutils/blocklists/liftover/min_ratio_%s/%s.bed'%(data_dir, ratio, assembly[organism])
 		blocklist = utils.read_blocklist(bl_file)
