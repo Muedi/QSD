@@ -4,17 +4,20 @@
 
 This repository is the official implementation of [*_S/M/L-QSD_*: Three quality-associated sequencing datasets to evaluate anomaly detection](Place-holder-url). 
 
->📋  Optional: include a graphic explaining your approach/main result, bibtex entry, link to demos, blog posts and tutorials
+![Workflow to create the datasets](data/qsd_creation_v4.jpg)
 
 ## Requirements
 
-To install requirements:
+To install requirements for the ML Experiments:
 
 ```setup
-pip install -r requirements.txt
+pip install -r experiments/requirements.txt
 ```
 
->📋  Describe how to set up the environment, e.g. pip/conda/docker commands, download datasets, etc...
+For the Feature generation scirpts: 
+```
+Docker 
+```
 
 ## Experimental Results
 After running the scripts "unsupervised_experiments.py" and "supervised_experiments.py", you will receive the following performance (AUC ROC mean ± standard deviation) of unsupervised anomaly detection
