@@ -22,6 +22,4 @@ Docker
 After running the scripts "unsupervised_experiments.py" and "supervised_experiments.py", you will receive the following performance (AUC ROC mean ± standard deviation) of unsupervised anomaly detection
 (top) and supervised classification (bottom) algorithms for the ChIP-Seq assay on S-QSD, M-QSD, and L-QSD.  
 
-![image](https://github.com/user-attachments/assets/8333b844-f5c0-4bd0-a647-ea5754065c9d)
-
-
+![image](https://github.com/user-attachments/assets/2d086fc6-1065-4b8c-9bc7-0ac53322a629)
