@@ -13,13 +13,26 @@ To install requirements for the ML Experiments:
 pip install -r experiments/requirements.txt
 ```
 
-For the Feature generation scirpts: 
+To install requirements for the feature generation:
+```setup
+conda env create -f bioinf.yml
 ```
-Docker 
-```
+By using the provided yml file, it is possible to create a conda environment with all dependencies and Bioconductor packages needed. However, it can be advisable to follow the more detailed step-by-step guides provided in the [seqQscorer README](https://github.com/salbrec/seqQscorer).
+
+The easiest and fastest way to get ready for using the feature generation pipeline is pulling the seqQscorer docker image, running it and using the feature generation script within the docker.
+For more detail about how to use the docker under Linux and Windows system, we refer to the [seqQscorer README](https://github.com/salbrec/seqQscorer).
 
 ## Experimental Results
 After running the scripts "unsupervised_experiments.py" and "supervised_experiments.py", you will receive the following performance (AUC ROC mean ± standard deviation) of unsupervised anomaly detection
 (top) and supervised classification (bottom) algorithms for the ChIP-Seq assay on S-QSD, M-QSD, and L-QSD.  
 
 ![image](https://github.com/user-attachments/assets/2d086fc6-1065-4b8c-9bc7-0ac53322a629)
+
+## Feature Generation
+The sciprt `feature_generation_pipeline_SML_QSD.py` has only one command line argument for the ENCODE accession of a raw sequencing file in FASTQ format. The pipeline autmoatically downloads this file into `./data/fastq/` and runs the tools and scripts to derive the different features. The result files from this will be saved under different directories in `./data/features/`. This is an example for creating all features for the S/M/L-QSD datasets for the sample ENCFF001NAO from ENCODE: 
+```
+python feature_generation_pipeline_SML_QSD.py ENCFF001NAO
+```
+The script `gather_features_for_S_M_L_QSD_datasets.py` can be used to gather all information from the different feature set to assemble the S-QSD, M-QSD, and L-QSD datasets and create a comma-separated file for each of them.
+
+
