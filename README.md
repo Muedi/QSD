@@ -7,13 +7,13 @@ We generate feature sets that contain quality information to predict low-quality
 We test Anomaliy-detection algorithms and compare them to supervised ML performance of identifying low quality features, based on ENCODE's *released* and *revoked* status. 
 ## Requirements
 
-To install requirements for the ML Experiments:
+###To install requirements for the ML Experiments:
 
 ```setup
 pip install -r experiments/requirements.txt
 ```
 
-To install requirements for the feature generation:
+###To install requirements for the feature generation:
 ```setup
 conda env create -f bioinf.yml
 ```
@@ -35,6 +35,6 @@ The sciprt `feature_generation_pipeline_SML_QSD.py` has only one command line ar
 ```
 python feature_generation_pipeline_SML_QSD.py ENCFF001NAO
 ```
-The feature generation might be applied to multiple samples. To create the dataset containing the features for multiple NGS samples, `gather_features_for_S_M_L_QSD_datasets.py` script can be used. It gathers all information from the different feature sets to assemble the S-QSD, M-QSD, and L-QSD datasets and create a comma-separated file for each of them.
+The feature generation might be applied to multiple samples. To create the dataset containing the features for multiple NGS samples, the `gather_features_for_S_M_L_QSD_datasets.py` script can be used. It gathers all information from the different feature sets to assemble the S-QSD, M-QSD, and L-QSD datasets and create a comma-separated file for each of them.
 
 
