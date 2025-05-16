@@ -7,13 +7,13 @@ We generate feature sets that contain quality information to predict low-quality
 We test Anomaliy-detection algorithms and compare them to supervised ML performance of identifying low quality features, based on ENCODE's *released* and *revoked* status. 
 ## Requirements
 
-### To install requirements for the ML Experiments:
+#### To install requirements for the ML Experiments:
 
 ```setup
 pip install -r experiments/requirements.txt
 ```
 
-### To install requirements for the feature generation:
+#### To install requirements for the feature generation:
 ```setup
 conda env create -f bioinf.yml
 ```
