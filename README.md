@@ -31,7 +31,7 @@ After running the scripts "unsupervised_experiments.py" and "supervised_experime
 ![image](https://github.com/user-attachments/assets/2d086fc6-1065-4b8c-9bc7-0ac53322a629)
 
 ## Feature Generation
-The sciprt `feature_generation_pipeline_SML_QSD.py` has only one command line argument for the ENCODE accession of a raw sequencing file in FASTQ format. The pipeline autmoatically downloads this file into `./data/fastq/` and runs different tools and scripts to derive the different features. The result files from this will be saved under different directories in `./data/features/`. This is an example for creating all features for the S/M/L-QSD datasets for the sample ENCFF001NAO from ENCODE: 
+The script `feature_generation_pipeline_SML_QSD.py` has only one command line argument for the ENCODE accession of a raw sequencing file in FASTQ format. The pipeline autmoatically downloads this file into `./data/fastq/` and runs different tools and scripts to derive the different features. The result files from this will be saved under different directories in `./data/features/`. This is an example for creating all features for the S/M/L-QSD datasets for the sample ENCFF001NAO from ENCODE: 
 ```
 python feature_generation_pipeline_SML_QSD.py ENCFF001NAO
 ```
