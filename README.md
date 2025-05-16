@@ -17,7 +17,9 @@ To install requirements for the feature generation:
 ```setup
 conda env create -f bioinf.yml
 ```
-By using the provided yml file, it is possible to create a conda environment with all dependencies and Bioconductor packages needed. However, it can be advisable to follow the more detailed step-by-step guides provided in the [seqQscorer README](https://github.com/salbrec/seqQscorer).
+By using the provided yml file, it is possible to create a conda environment with all dependencies and Bioconductor packages needed. The yml files also provides an overview of all dependencies with the versions.
+
+It can be advisable to follow the more detailed step-by-step guides provided in the [seqQscorer README](https://github.com/salbrec/seqQscorer).
 
 The easiest and fastest way to get ready for using the feature generation pipeline is pulling the seqQscorer docker image, running it and using the feature generation script within the docker.
 For more detail about how to use the docker under Linux and Windows system, we refer to the [seqQscorer README](https://github.com/salbrec/seqQscorer).
@@ -33,6 +35,6 @@ The sciprt `feature_generation_pipeline_SML_QSD.py` has only one command line ar
 ```
 python feature_generation_pipeline_SML_QSD.py ENCFF001NAO
 ```
-The script `gather_features_for_S_M_L_QSD_datasets.py` can be used to gather all information from the different feature set to assemble the S-QSD, M-QSD, and L-QSD datasets and create a comma-separated file for each of them.
+The feature generation might be applied to multiple samples. To create the dataset containing the features for multiple NGS samples, `gather_features_for_S_M_L_QSD_datasets.py` script can be used. It gathers all information from the different feature sets to assemble the S-QSD, M-QSD, and L-QSD datasets and create a comma-separated file for each of them.
 
 
