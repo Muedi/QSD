@@ -29,8 +29,7 @@ We validate that the proposed features are related to sequencing quality and ide
 and supervised classification algorithms for the ChIP-Seq assay on QC-34, and BL-n.  
 
 <img width="601" height="236" alt="image" src="https://github.com/user-attachments/assets/cb0842d0-cc1f-438d-a6d5-d8786c9561d5" />
-<img width="639" height="228" alt="image" src="https://github.com/user-attachments/assets/27e811ec-6e75-4f46-8dd9-2bd5068ee08d" />
-
+<img width="639" height="228" alt="image" src="https://github.com/user-attachments/assets/b4c75000-aac3-40b9-b8c8-1332b259d606" />
 
 
 ## Feature Generation
@@ -43,6 +42,7 @@ The feature generation might be applied to multiple samples. To create the datas
 ## BL-n Generation
 
 The required 'blocklist_read_counts.csv' can be downloaded here: https://seafile.rlp.net/seafhttp/f/7a7db59b51674ea8b7eb/?op=view 
+
 
 
 
