@@ -28,8 +28,8 @@ For more details about how to use the docker image under Linux and Windows syste
 We validate that the proposed features are related to sequencing quality and identify *revoked* samples based on their features in unsupervised and supervised settings. We evaluated nine BL feature sets, generated using alignment ratios ranging from 0.1 to 0.9 in 0.1 increments. Each set had between eight and 1,183 features.  Echt dot shows the performance (mean AUC ROC) of the machine learning methods in an unsupervised setting (top) and a supervised setting (bottom) after 10 runs.  After running the scripts "unsupervised_feature_validation.py" and "supervised_feature_validation.py", you will receive the performance (AUC ROC mean ± standard deviation) of unsupervised anomaly detection
 and supervised classification algorithms for the ChIP-Seq assay on QC-34, and BL-n.  
 
-<img width="601" height="236" alt="image" src="https://github.com/user-attachments/assets/cb0842d0-cc1f-438d-a6d5-d8786c9561d5" />
-<img width="639" height="228" alt="image" src="https://github.com/user-attachments/assets/b4c75000-aac3-40b9-b8c8-1332b259d606" />
+<img width="601" height="350" alt="image" src="https://github.com/user-attachments/assets/cb0842d0-cc1f-438d-a6d5-d8786c9561d5" />
+<img width="639" height="450" alt="image" src="https://github.com/user-attachments/assets/b4c75000-aac3-40b9-b8c8-1332b259d606" />
 
 
 ## Feature Generation
@@ -42,6 +42,7 @@ The feature generation might be applied to multiple samples. To create the datas
 ## BL-n Generation
 
 The required 'blocklist_read_counts.csv' can be downloaded here: https://seafile.rlp.net/seafhttp/f/7a7db59b51674ea8b7eb/?op=view 
+
 
 
 
