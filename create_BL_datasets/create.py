@@ -13,7 +13,7 @@ def get_assay(assay_title):
 
 
 # add assay and organism
-meta = pd.read_csv('./fastq_samples_meta.csv')
+meta = pd.read_csv('../data/meta/fastq_samples_meta.csv')
 meta['assay'] = [ get_assay(at) for at in meta['Assay title'] ]
 meta['organism'] = [ donor.split('/')[1].split('-')[0] for donor in meta['Donor'] ]
 meta['status'] = list(meta['Status'])
@@ -30,7 +30,8 @@ print('\nStarting with %d possible features for minMatch ratio = %.2f\n'%(len(ID
 
 counts = None
 try:
-    counts = pd.read_csv('./blocklist_read_counts.csv')
+    parts = [ pd.read_csv('blocklist_read_counts/data_part%d.csv'%(d)) for d in range(10) ]
+    counts = pd.concat(parts)
 except:
     counts = pd.read_csv('./blocklist_read_counts_TEST.csv')
 counts = counts[['accession'] + IDs]
@@ -50,7 +51,7 @@ if len(kick_cols) > 0:
     if len(kick_cols) > 1:
         message = '%d features have been exlcuded because they are all zeros:'%(len(kick_cols))
     print(message)
-    print(kick_cols, '\n')
+    print(', '.join(kick_cols), '\n')
 
 # add assay and organism information to the dataset
 counts = counts[['accession'] + keep_cols]
@@ -62,7 +63,9 @@ print('\nThe final dataset has %d features.'%(len(keep_cols)))
 print('(and %d samples)\n'%(counts.shape[0]))
 
 # write the blocklist counts to a csv file
-file_name = './BL-%s'%(len(keep_cols))
+file_name = 'BL-%s'%(len(keep_cols))
+if counts.shape[0] < 100:
+    file_name = 'TEST_' + file_name
 counts.to_csv(file_name + '.csv', index=False)
 
 print('Double check for missing values:')
