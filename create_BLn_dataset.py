@@ -13,14 +13,14 @@ def get_assay(assay_title):
 
 
 # add assay and organism
-meta = pd.read_csv('../data/meta/fastq_samples_meta.csv')
+meta = pd.read_csv('./data/meta/fastq_samples_meta.csv')
 meta['assay'] = [ get_assay(at) for at in meta['Assay title'] ]
 meta['organism'] = [ donor.split('/')[1].split('-')[0] for donor in meta['Donor'] ]
 meta['status'] = list(meta['Status'])
 
 ratio = float(argv[1])
 
-blocklists_meta = pd.read_csv('blocklist_minMatch_ratio.csv')
+blocklists_meta = pd.read_csv('./data/meta/blocklist_minMatch_ratio.csv')
 blocklists_meta.dropna(inplace=True)
 
 selection = blocklists_meta[blocklists_meta['ratio'] >= ratio]
@@ -30,10 +30,10 @@ print('\nStarting with %d possible features for minMatch ratio = %.2f\n'%(len(ID
 
 counts = None
 try:
-    parts = [ pd.read_csv('blocklist_read_counts/data_part%d.csv'%(d)) for d in range(10) ]
+    parts = [ pd.read_csv('./data/blocklist_read_counts/data_part%d.csv'%(d)) for d in range(10) ]
     counts = pd.concat(parts)
 except:
-    counts = pd.read_csv('./blocklist_read_counts_TEST.csv')
+    counts = pd.read_csv('./data/blocklist_read_counts/blocklist_read_counts_TEST.csv')
 counts = counts[['accession'] + IDs]
 
 # quickly check for features that are all zeros
@@ -63,7 +63,7 @@ print('\nThe final dataset has %d features.'%(len(keep_cols)))
 print('(and %d samples)\n'%(counts.shape[0]))
 
 # write the blocklist counts to a csv file
-file_name = 'BL-%s'%(len(keep_cols))
+file_name = './QSD_datasets/BL-%s'%(len(keep_cols))
 if counts.shape[0] < 100:
     file_name = 'TEST_' + file_name
 counts.to_csv(file_name + '.csv', index=False)
