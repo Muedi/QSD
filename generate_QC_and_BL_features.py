@@ -214,6 +214,9 @@ except:
 	print('Failed to create the blocklist features for ratio')
 	exit(1)
 
+if exists('./Rplots.pdf'):
+	system('rm ./Rplots.pdf -f')
+
 print('Successfully processed the sample:', accession)
 exit(0)
 
