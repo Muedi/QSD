@@ -28,11 +28,11 @@ feat_names_LOC = utils.get_LOC_feature_names()
 feat_names_TSS = utils.get_TSS_feature_names()
 
 # prepare lists that are considered as columns for the final datasets
-s_cols  = [ 'RAW_'+fn for fn in feat_names_RAW ]
-s_cols += [ 'MAP_'+fn for fn in feat_names_MAP ]
-s_cols += feat_names_LOC
-s_cols += feat_names_TSS
-s_values = []
+qc_cols  = [ 'RAW_'+fn for fn in feat_names_RAW ]
+qc_cols += [ 'MAP_'+fn for fn in feat_names_MAP ]
+qc_cols += feat_names_LOC
+qc_cols += feat_names_TSS
+qc_values = []
 
 # initially, this script was supposed to run for a fixed list of different ratios 
 # for the liftOver blocklists. However, we now derive the counts for all blocklists 
@@ -40,8 +40,8 @@ s_values = []
 # From these counts, datasets for different ratios can be created (see create_BLn_dataset.py)
 blocklist_fp = './data/utils/blocklists/liftover/min_ratio_0_10/GRCh38.bed'
 blocklist = pd.read_csv(blocklist_fp, sep='\t', names=['chr', 'start', 'end', 'ID'])
-ml_cols = list(blocklist['ID'])
-ml_values = []
+bl_cols = list(blocklist['ID'])
+bl_values = []
 
 # iterate over all accessions that could potentially be in the dataset
 possible_accessions = samples_meta['Accession']
@@ -94,24 +94,24 @@ for index, accession in enumerate(possible_accessions):
         print('Therefore, sample %s is skipped entirely.'%(accession))
         continue
 
-    s_values.append( raw_vals + map_vals + loc_vals + tss_vals )
-
     # get the values for the two different blocklists (M/L-QSD)
+    bl_row = None
     try:
         counts_fp = '%sfeatures/05_BLF/ratio_0_10/%s.tsv'%(data_dir, accession)
         counts = pd.read_csv(counts_fp)
         count_map = dict(zip(counts['blID'], counts['count']))
-        row = [ count_map.get(col,0.0) for col in ml_cols ]
-        ml_values.append(row)
+        bl_row = [ count_map.get(col,0.0) for col in bl_cols ]
     except:
-        print("Couldn't get the blocklist (%s) features for %s"%(ratio, accession))
+        print("Couldn't get the blocklist features for %s"%(accession))
         print('Therefore, sample %s is skipped entirely.'%(accession))
         continue
     
+    qc_values.append( raw_vals + map_vals + loc_vals + tss_vals )
+    bl_values.append(bl_row)
     accessions.append(accession)
 
 # create the QC-QSD dataframe and save to CSV file
-data = pd.DataFrame( data=s_values, columns=s_cols )
+data = pd.DataFrame( data=qc_values, columns=qc_cols )
 data.insert(0, 'accession', accessions)
 data.to_csv('./QSD_datasets/QSD-QC.csv', index=False)
 print('QSD-QC:')
@@ -119,7 +119,7 @@ print(data)
 print()
 
 # create the M/L-QSD dataframes and save to CSV file
-data = pd.DataFrame( data=ml_values, columns=ml_cols )
+data = pd.DataFrame( data=bl_values, columns=bl_cols )
 data.insert(0, 'accession', accessions)
 data.to_csv('./QSD_datasets/QSD-BL-all.csv', index=False)
 print('QSD-BL-all:')

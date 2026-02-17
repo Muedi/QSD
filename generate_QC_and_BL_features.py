@@ -203,7 +203,7 @@ with open(file_paths['MAP_bed_unsorted'], 'r') as f:
 # count the reads overlapping with the blocklisted regions
 # using the summits, a overlap of a read is only given if the summit is within the blocklist
 # region. Hence, if more than half of the read overlaps with the blocklist region
-# we only do this for the blocklist create with the cutoff 0.10 for the
+# We only do this for the blocklist create with the cutoff 0.10 for the
 # "Minimum ratio of bases that must remap" as it includes the blocklist for all BL datasets.
 try:
 	bl_file = '%sutils/blocklists/liftover/min_ratio_0_10/%s.bed'%(data_dir, assembly[organism])

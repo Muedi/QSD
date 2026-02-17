@@ -49,7 +49,7 @@ for col in counts.columns:
 message = '\n1 feature has been exlcuded because it is all zeros:'
 if len(kick_cols) > 0:
     if len(kick_cols) > 1:
-        message = '%d features have been exlcuded because they are all zeros:'%(len(kick_cols))
+        message = '%d features have been exlcuded because the values are all zero:'%(len(kick_cols))
     print(message)
     print(', '.join(kick_cols), '\n')
 
