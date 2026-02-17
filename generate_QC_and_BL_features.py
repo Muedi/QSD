@@ -209,9 +209,9 @@ try:
 	bl_file = '%sutils/blocklists/liftover/min_ratio_0_10/%s.bed'%(data_dir, assembly[organism])
 	blocklist = utils.read_blocklist(bl_file)
 	count_BL_reg = utils.count_reads_in_regions(summits, blocklist, chrom_size_map)
-	count_BL_reg.to_csv(file_paths['05_BLF_0_10'%(ratio)], index=False)
+	count_BL_reg.to_csv(file_paths['05_BLF_0_10'], index=False)
 except:
-	print('Failed to create the blocklist features for ratio', ratio)
+	print('Failed to create the blocklist features for ratio')
 	exit(1)
 
 print('Successfully processed the sample:', accession)
