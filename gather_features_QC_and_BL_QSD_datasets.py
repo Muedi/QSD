@@ -43,16 +43,18 @@ blocklist = pd.read_csv(blocklist_fp, sep='\t', names=['chr', 'start', 'end', 'I
 ml_cols = list(blocklist['ID'])
 ml_values = []
 
+# iterate over all accessions that could potentially be in the dataset
+possible_accessions = samples_meta['Accession']
+
 # this is just for testing to show how the script has been used to gather the features
 # and assemble the different datasets
-accessions = []
-temp = samples_meta['Accession']
-temp = ['ENCFF001NAO', 'ENCFF001NFW']
+possible_accessions = ['ENCFF001NAO', 'ENCFF001NFW']
 
-for index, accession in enumerate(temp):
+accessions = []
+for index, accession in enumerate(possible_accessions):
     file_paths = utils.get_feature_file_paths(accession, data_dir)
 
-    # get the values for the S-QSD features
+    # get the values for the QC features
     feature_vals = {}
     raw_vals, map_vals, loc_vals, tss_vals = None, None, None, None
 

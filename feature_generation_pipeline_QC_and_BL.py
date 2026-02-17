@@ -1,5 +1,5 @@
 """
-Script for generating the features for the S/M/L-QSD datasets.
+Script for generating the features for the QSD datasets (QC and BL).
 It takes one command line argument that is the ENCODE accession for a 
 NGS samples in fastq format. This script has access to the full meta 
 information required for the QSD data and automatically derives all features.
@@ -202,18 +202,17 @@ with open(file_paths['MAP_bed_unsorted'], 'r') as f:
 
 # count the reads overlapping with the blocklisted regions
 # using the summits, a overlap of a read is only given if the summit is within the blocklist
-# region. hence, if more than half of the read overlaps with the blocklist region
-# we only do this for the L-QSD blocklist create with the cutoff 0.25 for the
-# "Minimum ratio of bases that must remap" as it includes the blocklist for the M-QSD.
-for ratio in ['0_25']:
-	try:
-		bl_file = '%sutils/blocklists/liftover/min_ratio_%s/%s.bed'%(data_dir, ratio, assembly[organism])
-		blocklist = utils.read_blocklist(bl_file)
-		count_BL_reg = utils.count_reads_in_regions(summits, blocklist, chrom_size_map)
-		count_BL_reg.to_csv(file_paths['05_BLF_%s'%(ratio)], index=False)
-	except:
-		print('Failed to create the blocklist features for ratio', ratio)
-		exit(1)
+# region. Hence, if more than half of the read overlaps with the blocklist region
+# we only do this for the blocklist create with the cutoff 0.10 for the
+# "Minimum ratio of bases that must remap" as it includes the blocklist for all BL datasets.
+try:
+	bl_file = '%sutils/blocklists/liftover/min_ratio_0_10/%s.bed'%(data_dir, assembly[organism])
+	blocklist = utils.read_blocklist(bl_file)
+	count_BL_reg = utils.count_reads_in_regions(summits, blocklist, chrom_size_map)
+	count_BL_reg.to_csv(file_paths['05_BLF_0_10'%(ratio)], index=False)
+except:
+	print('Failed to create the blocklist features for ratio', ratio)
+	exit(1)
 
 print('Successfully processed the sample:', accession)
 exit(0)
