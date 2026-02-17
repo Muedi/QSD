@@ -34,14 +34,17 @@ s_cols += feat_names_LOC
 s_cols += feat_names_TSS
 s_values = []
 
-ml_cols, ml_values = {}, {}
-liftOver_ratios = ['0_50', '0_25']
-for ratio in liftOver_ratios:
-    blocklist_fp = './data/utils/blocklists/liftover/min_ratio_%s/GRCh38.bed'%(ratio)
-    blocklist = pd.read_csv(blocklist_fp, sep='\t', names=['chr', 'start', 'end', 'ID'])
-    ml_cols[ratio] = list(blocklist['ID'])
-    ml_values[ratio] = []
+# initially, this script was supposed to run for a fixed list of different ratios 
+# for the liftOver blocklists. However, we now derive the counts for all blocklists 
+# we receive with a minMatch ratio of 0.10.
+# From these counts, datasets for different ratios can be created (see create_BLn_dataset.py)
+blocklist_fp = './data/utils/blocklists/liftover/min_ratio_0_10/GRCh38.bed'
+blocklist = pd.read_csv(blocklist_fp, sep='\t', names=['chr', 'start', 'end', 'ID'])
+ml_cols = list(blocklist['ID'])
+ml_values = []
 
+# this is just for testing to show how the script has been used to gather the features
+# and assemble the different datasets
 accessions = []
 temp = samples_meta['Accession']
 temp = ['ENCFF001NAO', 'ENCFF001NFW']
@@ -93,12 +96,11 @@ for index, accession in enumerate(temp):
 
     # get the values for the two different blocklists (M/L-QSD)
     try:
-        counts_fp = '%sfeatures/05_BLF/ratio_0_25/%s.tsv'%(data_dir, accession)
+        counts_fp = '%sfeatures/05_BLF/ratio_0_10/%s.tsv'%(data_dir, accession)
         counts = pd.read_csv(counts_fp)
         count_map = dict(zip(counts['blID'], counts['count']))
-        for ratio in liftOver_ratios:
-            row = [ count_map.get(col,0.0) for col in ml_cols[ratio] ]
-            ml_values[ratio].append(row)
+        row = [ count_map.get(col,0.0) for col in ml_cols ]
+        ml_values.append(row)
     except:
         print("Couldn't get the blocklist (%s) features for %s"%(ratio, accession))
         print('Therefore, sample %s is skipped entirely.'%(accession))
@@ -106,19 +108,18 @@ for index, accession in enumerate(temp):
     
     accessions.append(accession)
 
-# create the S-QSD dataframe and save to CSV file
+# create the QC-QSD dataframe and save to CSV file
 data = pd.DataFrame( data=s_values, columns=s_cols )
 data.insert(0, 'accession', accessions)
-data.to_csv('./QSD_datasets/S-QSD.csv', index=False)
-print('S-QSD:')
+data.to_csv('./QSD_datasets/QSD-QC.csv', index=False)
+print('QSD-QC:')
 print(data)
 print()
 
 # create the M/L-QSD dataframes and save to CSV file
-for qsd_size, ratio in zip(['M','L'], liftOver_ratios):
-    data = pd.DataFrame( data=ml_values[ratio], columns=ml_cols[ratio] )
-    data.insert(0, 'accession', accessions)
-    data.to_csv('./QSD_datasets/%s-QSD.csv'%(qsd_size), index=False)
-    print('%s-QSD:'%(qsd_size))
-    print(data)
-    print()
+data = pd.DataFrame( data=ml_values, columns=ml_cols )
+data.insert(0, 'accession', accessions)
+data.to_csv('./QSD_datasets/QSD-BL-all.csv', index=False)
+print('QSD-BL-all:')
+print(data)
+print()

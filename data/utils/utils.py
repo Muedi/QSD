@@ -61,7 +61,7 @@ def get_feature_file_paths(acc, data_dir):
     paths['TSS'] = data_dir + 'features/04_TSS/' + acc + '.tsv'
 
     # file paths for the blocklist features 
-    for ratio in ['0_25','0_50']:
+    for ratio in ['0_10','0_25','0_50']:
         path_name = '05_BLF_%s'%(ratio)
         paths[path_name] = '%sfeatures/05_BLF/ratio_%s/%s.tsv'%(data_dir, ratio, acc)
     
