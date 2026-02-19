@@ -79,7 +79,7 @@ for index, accession in enumerate(possible_accessions):
     # read out the ChIPseeker table to receive the LOC features
     try:
         value_map = utils.get_LOC_features(file_paths['LOC'])
-        loc_vals = [ value_map.get(fn, np.nan) for fn in feat_names_LOC ]
+        loc_vals = [ value_map.get(fn, 0.0) for fn in feat_names_LOC ]
     except:
         print("Couldn't get the LOC features for %s"%(accession))
         print('Therefore, sample %s is skipped entirely.'%(accession))
@@ -88,7 +88,7 @@ for index, accession in enumerate(possible_accessions):
     # read out the ChIPpeakAnno table to receive the TSS features
     try:
         value_map = utils.get_TSS_features(file_paths['TSS']) 
-        tss_vals = [ value_map.get(fn, np.nan) for fn in feat_names_TSS ]
+        tss_vals = [ value_map.get(fn, 0.0) for fn in feat_names_TSS ]
     except:
         print("Couldn't get the TSS features for %s"%(accession))
         print('Therefore, sample %s is skipped entirely.'%(accession))
@@ -100,7 +100,7 @@ for index, accession in enumerate(possible_accessions):
         counts_fp = '%sfeatures/05_BLF/ratio_0_10/%s.tsv'%(data_dir, accession)
         counts = pd.read_csv(counts_fp)
         count_map = dict(zip(counts['blID'], counts['count']))
-        bl_row = [ count_map.get(col,0.0) for col in bl_cols ]
+        bl_row = [ count_map.get(col, 0.0) for col in bl_cols ]
     except:
         print("Couldn't get the blocklist features for %s"%(accession))
         print('Therefore, sample %s is skipped entirely.'%(accession))
