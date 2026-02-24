@@ -30,7 +30,8 @@ and supervised classification algorithms for the ChIP-Seq assay on QC-34, and BL
 
 <img width="601" height="350" alt="image" src="https://github.com/user-attachments/assets/5d6fdbd5-14be-4e22-a8c9-40dcd37cbe44"/>
 
-<img width="639" height="450" alt="image" src="https://github.com/user-attachments/assets/b4c75000-aac3-40b9-b8c8-1332b259d606" />
+<img width="639" height="450" alt="image" src="https://github.com/user-attachments/assets/0c482e84-6b3a-4b09-b4c7-629097b904e5" />
+
 
 
 ## Feature Generation
@@ -43,6 +44,7 @@ The feature generation might be applied to multiple samples. To create the datas
 ## BL-n Generation
 
 The required 'blocklist_read_counts.csv' can be downloaded here: https://seafile.rlp.net/seafhttp/f/7a7db59b51674ea8b7eb/?op=view 
+
 
 
 
