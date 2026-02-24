@@ -41,7 +41,7 @@ models = [KNN(),
 
 # train and evaluate models in parallel
 auc_results = Parallel(n_jobs=30)(
-    delayed(utils.worker_unsupervised_experiments)(i, model, features, target)
+    delayed(utils.worker_unsupervised_experiments)(i, model, features, target, file_name)
     for model in models
     for i in range(10) # number of runs
 )
