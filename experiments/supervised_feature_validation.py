@@ -39,7 +39,7 @@ splits = ["split_1", "split_2", "split_3", "split_4", "split_5", "split_6", "spl
 
 # train and evaluate models in parallel
 auc_results = Parallel(n_jobs=30)(
-    delayed(utils.worker_supervised_experiments)(i, splits, model_name, features, target) 
+    delayed(utils.worker_supervised_experiments)(i, splits, model_name, features, target, file_name) 
     for model_name in models
     for i in range(10)) # number of runs
 
