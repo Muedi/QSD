@@ -108,10 +108,10 @@ def impute_features_unsupervised(df_X_scaled, file_name):
    The imputation method depends on the type of the datasets.
 
    *QC-34*: 
-   All missing values are imputed using the median of the training column, except the columns that start with "LOC_". Those "LOC"-features are filled with a constant value (default 0.0).
+   All missing values are imputed using the median of the column, except the columns that start with "LOC_". Those "LOC"-features are filled with a constant value (default 0.0).
 
    *BL-n*: 
-   All missing values are imputed using the median of the training column.
+   All missing values are imputed using the median of the column.
    
    
   Parameters
