@@ -25,13 +25,20 @@ The easiest and fastest way to get ready for using the feature generation pipeli
 For more details about how to use the docker image under Linux and Windows systems, we refer to the [seqQscorer README](https://github.com/salbrec/seqQscorer).
 
 ## Feature Validation
-We validate that the proposed features are related to sequencing quality and identify *revoked* samples based on their features in unsupervised and supervised settings. We evaluated nine BL feature sets, generated using alignment ratios ranging from 0.1 to 0.9 in 0.1 increments. Each set had between eight and 1,183 features.  Echt dot shows the performance (mean AUC ROC) of the machine learning methods in an unsupervised setting (top) and a supervised setting (bottom) after 10 runs.  After running the scripts "unsupervised_feature_validation.py" and "supervised_feature_validation.py", you will receive the performance (AUC ROC mean ± standard deviation) of unsupervised anomaly detection
-and supervised classification algorithms for the ChIP-Seq assay on QC-34, and BL-n.  
+We validate that the proposed features are related to sequencing quality and identify *revoked* samples based on their features in unsupervised and supervised settings. We evaluated nine BL feature sets, generated using alignment ratios ranging from 0.1 to 0.9 in 0.1 increments. Each set had between eight and 1,183 features.  Echt dot shows the performance (mean AUC ROC) of the machine learning methods in an unsupervised setting (top) and a supervised setting (bottom) after 10 runs.  The square displays the performance of QC-34.
 
 <img width="601" height="350" alt="image" src="https://github.com/user-attachments/assets/5d6fdbd5-14be-4e22-a8c9-40dcd37cbe44"/>
 
 <img width="639" height="450" alt="image" src="https://github.com/user-attachments/assets/0c482e84-6b3a-4b09-b4c7-629097b904e5" />
 
+After running the scripts "unsupervised_feature_validation.py" and "supervised_feature_validation.py", you will receive the performance (AUC ROC mean ± standard deviation) of unsupervised anomaly detection
+and supervised classification algorithms for the ChIP-Seq assay on QC-34, and BL-n.  
+```
+python unsupervised_feature_validation.py
+```
+```
+python supervised_feature_validation.py
+```
 
 
 ## Feature Generation
@@ -42,10 +49,11 @@ python generate_QC_and_BL_features.py ENCFF001NAO
 The feature generation might be applied to multiple samples. To create the dataset containing the features for multiple NGS samples, the `gather_QC_and_BL_features.py` script can be used. It gathers all information from the different feature sets to assemble the QC-34, and BL-n datasets and create a comma-separated file for each of them.
 
 ## BL-n Generation
-The script `generate_BL_dataset.py` creates a dataset with cross-species blocklists that come out with a minMatch ratio between 0 and 1. The ratio defines the granularity of the dataset and the number of features (n) the BL dataset will contain. This is in an example for creating BL-1183 that contains 1183 features: 
+The script `generate_BL_dataset.py` creates a dataset with cross-species blocklists that come out with an alignment ratio between 0 and 1. The ratio defines the granularity of the dataset and the number of features (n) the BL dataset will contain. This is in an example for creating BL-1183 that contains 1183 features: 
 ```
 python generate_BL_dataset.py 0.1
 ```
+
 
 
 
