@@ -51,10 +51,11 @@ python generate_QC_and_BL_features.py ENCFF001NAO
 The feature generation might be applied to multiple samples. To create the dataset containing the features for multiple NGS samples, the `gather_QC_and_BL_features.py` script can be used. It gathers all information from the different feature sets to assemble the QC-34, and BL-n datasets and create a comma-separated file for each of them.
 
 ## BL-n Generation
-The script `generate_BL_dataset.py` creates a dataset with cross-species blocklists that come out with an alignment ratio between 0 and 1. The ratio defines the granularity of the dataset and the number of features (n) the BL dataset will contain. This is in an example for creating BL-1183 that contains 1183 features: 
+The script `generate_BL_dataset.py` creates a dataset with cross-species blocklists that come out with an alignment ratio between 0 and 1. The ratio defines the granularity of the dataset and the number of features (n) the BL dataset will contain. This is in an example for creating BL-1183 that contains 1,183 features: 
 ```
 python generate_BL_dataset.py 0.1
 ```
+
 
 
 
