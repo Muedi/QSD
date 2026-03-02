@@ -4,7 +4,7 @@ for the QC-34 and BL-n datasets.
 It uses the same utils as used for the feature generation and expects to find 
 the output files from the different tools in the "features" following a certain 
 scheme as defined in the utils funtion "get_feature_file_paths()".
-The script uses the meta data for the QSD datasets to iterate over all
+The script uses the meta data for the datasets to iterate over all
 samples to gather all feature values.
 """
 
