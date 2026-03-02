@@ -1,6 +1,6 @@
 """
 This script reads in tables and statistics generated for the features
-for the S/M/L-QSD datasets. 
+for the QC-34 and BL-n datasets. 
 It uses the same utils as used for the feature generation and expects to find 
 the output files from the different tools in the "features" following a certain 
 scheme as defined in the utils funtion "get_feature_file_paths()".
