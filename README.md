@@ -35,15 +35,16 @@ and supervised classification algorithms for the ChIP-Seq assay on QC-34, and BL
 
 
 ## Feature Generation
-The script `feature_generation_pipeline_SML_QSD.py` has only one command line argument for the ENCODE accession of a raw sequencing file in FASTQ format. The pipeline autmoatically downloads this file into `./data/fastq/` and runs different tools and scripts to derive the different features. The result files from this will be saved under different directories in `./data/features/`. This is an example for creating all features for the QC-34, and BL-n datasets for the sample ENCFF001NAO from ENCODE: 
+The script `generate_QC_and_BL_features.py` has only one command line argument for the ENCODE accession of a raw sequencing file in FASTQ format. The pipeline autmoatically downloads this file into `./data/fastq/` and runs different tools and scripts to derive the different features. The result files from this will be saved under different directories in `./data/features/`. This is an example for creating all features for the QC-34, and BL-n datasets for the sample ENCFF001NAO from ENCODE: 
 ```
-python feature_generation_pipeline_SML_QSD.py ENCFF001NAO
+python generate_QC_and_BL_features.py ENCFF001NAO
 ```
 The feature generation might be applied to multiple samples. To create the dataset containing the features for multiple NGS samples, the `gather_features_for_S_M_L_QSD_datasets.py` script can be used. It gathers all information from the different feature sets to assemble the QC-34, and BL-n datasets and create a comma-separated file for each of them.
 
 ## BL-n Generation
 
 The required 'blocklist_read_counts.csv' can be downloaded here: https://seafile.rlp.net/seafhttp/f/7a7db59b51674ea8b7eb/?op=view 
+
 
 
 
