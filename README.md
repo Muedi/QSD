@@ -1,6 +1,6 @@
 # An Imbalanced Dataset with Multiple Feature Sets for Studying Quality Control of Next-Generation Sequencing
 
-This repository is the official implementation of [*An Imbalanced Dataset with Multiple Feature Sets for Studying Quality Control of Next-Generation Sequencing](Place-holder-url). 
+This repository is the official implementation of [An Imbalanced Dataset with Multiple Feature Sets for Studying Quality Control of Next-Generation Sequencing](Place-holder-url). 
 
 ![Workflow to create the datasets](data/qsd_creation_v13.jpg)
 We generate feature sets that contain quality information to predict low-quality in functional genomics files, we provide a dataset of 37,491 RNA-seq, DNAse-seq, ChIP-seq and eCLIP files. 
@@ -55,6 +55,7 @@ The script `generate_BL_dataset.py` creates a dataset with cross-species blockli
 ```
 python generate_BL_dataset.py 0.1
 ```
+
 
 
 
