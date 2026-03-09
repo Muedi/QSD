@@ -1,5 +1,5 @@
 """
-Script for generating the features for the QSD datasets (QC and BL).
+Script for generating the features for the QC-34 and BL-n datasets.
 It takes one command line argument that is the ENCODE accession for a 
 NGS samples in fastq format. This script has access to the full meta 
 information required for the QSD data and automatically derives all features.
@@ -219,6 +219,7 @@ if exists('./Rplots.pdf'):
 
 print('Successfully processed the sample:', accession)
 exit(0)
+
 
 
 
