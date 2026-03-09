@@ -25,7 +25,7 @@ The easiest and fastest way to get ready for using the feature generation pipeli
 For more details about how to use the docker image under Linux and Windows systems, we refer to the [seqQscorer README](https://github.com/salbrec/seqQscorer).
 
 ## Feature Validation
-We validate that the proposed features are related to sequencing quality and identify *revoked* samples based on their features in unsupervised and supervised settings. We evaluated nine BL feature sets, generated using alignment ratios ranging from 0.1 to 0.9 in 0.1 increments. Each set had between eight and 1,183 features.  Echt dot shows the performance (mean AUC ROC) of the machine learning methods in an unsupervised setting (top) and a supervised setting (bottom) after 10 runs.  The square displays the performance of QC-34.
+We validate that the proposed feature sets are related to sequencing quality and identify *revoked* samples based on their features in unsupervised and supervised settings. We evaluated nine BL feature sets, generated using alignment ratios ranging from 0.1 to 0.9 in 0.1 increments. Each set had between eight and 1,183 features.  Echt dot shows the performance (mean AUC ROC) of the machine learning methods in an unsupervised setting (top) and a supervised setting (bottom) after 10 runs.  The square displays the performance of QC-34.
 
 #### Unsupervised setting:
 <img width="639" height="450" alt="image" src="https://github.com/user-attachments/assets/0c482e84-6b3a-4b09-b4c7-629097b904e5" />
@@ -55,6 +55,7 @@ The script `generate_BL_dataset.py` creates a dataset with cross-species blockli
 ```
 python generate_BL_dataset.py 0.1
 ```
+
 
 
 
