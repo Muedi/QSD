@@ -28,8 +28,9 @@ For more details about how to use the docker image under Linux and Windows syste
 We validate that the proposed feature sets are related to sequencing quality and identify *revoked* samples based on their features in unsupervised and supervised settings. We evaluated nine BL feature sets, generated using alignment ratios ranging from 0.1 to 0.9 in 0.1 increments. Each set had between eight and 1,183 features.  Echt dot shows the performance (mean AUC ROC) of the machine learning methods in an unsupervised setting (top) and a supervised setting (bottom) after 10 runs.  The square displays the performance of QC-34.
 
 #### Unsupervised setting:
-<img width="639" height="450" alt="image" src="https://github.com/user-attachments/assets/0c482e84-6b3a-4b09-b4c7-629097b904e5" />
-
+<p align = "center">
+  <img width="639" height="450" alt="image" src="https://github.com/user-attachments/assets/0c482e84-6b3a-4b09-b4c7-629097b904e5" />
+</p>
 #### Supervised setting:
 <img width="639" height="450" alt="image" src="https://github.com/user-attachments/assets/5d6fdbd5-14be-4e22-a8c9-40dcd37cbe44"/>
 
@@ -50,6 +51,10 @@ The script `generate_BL_dataset.py` creates a dataset with cross-species blockli
 ```
 python generate_BL_dataset.py 0.1
 ```
+The lineplot serves as inspiration. It shows the relationship between alignment ratio (x-axis) and number of features (y-axis).
+
+![lineplot_ratio_features](https://github.com/user-attachments/assets/b7f99b5a-50b6-4352-9c39-f0a17dca4dbe)
+
 
 
 
