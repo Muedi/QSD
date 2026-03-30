@@ -102,51 +102,6 @@ def impute_train_test_features_supervised(df_X_train_scaled, df_X_test_scaled, f
 
    return df_X_train_scaled_imputed, df_X_test_scaled_imputed
 
-def impute_features_unsupervised(df_X_scaled, file_name):
-   """
-   This function imputes or replaces the missing values of the data of the unsupervised feature validation. 
-   The imputation method depends on the type of the datasets.
-
-   *QC-34*: 
-   All missing values are imputed using the median of the column, except the columns that start with "LOC_". Those "LOC"-features are filled with a constant value (default 0.0).
-
-   *BL-n*: 
-   All missing values are imputed using the median of the column.
-   
-   
-  Parameters
-  -----------------
-  df_X_scaled:  scaled input features
-  file_name: name of the dataset
-
-  """
-   is_qc_file = "QC" in file_name
-
-   if is_qc_file:
-    orig_cols = df_X_scaled.columns
-    qc_loc_features = [loc_column for loc_column in df_X_scaled if loc_column.startswith("LOC_")]
-    qc_other_features = [other_column for other_column in df_X_scaled if not other_column.startswith("LOC_")]
-
-    imp_loc  = SimpleImputer(strategy="constant", fill_value=0)
-    imp_other = SimpleImputer(strategy="median")
-
-    X_loc   = imp_loc.fit_transform(df_X_scaled[qc_loc_features])
-    X_other  = imp_other.fit_transform(df_X_scaled[qc_other_features])
-
-    df_X_scaled_imputed = df_X_scaled.copy()
-    
-    df_X_scaled_imputed[qc_loc_features]  = X_loc
-    df_X_scaled_imputed[qc_other_features] = X_other
-
-    assert df_X_scaled_imputed.columns.equals(orig_cols)
-
-   else:
-    imp = SimpleImputer(missing_values=np.nan, strategy='median')
-    X_imputed =  imp.fit_transform(df_X_scaled)
-    df_X_scaled_imputed = pd.DataFrame(X_imputed, columns = df_X_scaled.columns, index = df_X_scaled.index)
-
-   return df_X_scaled_imputed
-
 
 def scale_and_impute_features_supervised_experiments(X_train, X_test, y_train, y_test, file_name):
   """
@@ -206,49 +161,6 @@ def scale_and_impute_features_supervised_experiments(X_train, X_test, y_train, y
       print("There is an error, check the indices")
 
   return df_X_train_scaled_imputed, df_X_test_scaled_imputed, y_train.sort_index(), y_test.sort_index()
-
-def scale_and_impute_features_unsupervised_experiments(X, y, file_name):
-  """
-  This function first checks if there are missing values in any of the columns. 
-  If there are none, the features are transformed or scaled directly with min-max-scaling. 
-  If there are missing values, then each column is first transformed with min-max-scaling before 
-  the missing values are replaced or imputed using the function "impute_train_test_features". 
-  
-  Parameters
-  -----------------
-  X: input features
-  y: target variable
-  """
-  scaler = MinMaxScaler()
-  df_missing_values = X[X.isna().any(axis = 1)] # filters dataframe to select any row with missing values
-
- # there are no missing values
-  if df_missing_values.shape[0] == 0: 
-    X_scaled = scaler.fit_transform(X)
-    df_X_scaled_imputed  = pd.DataFrame(X_scaled, columns= X.columns, index=X.index)
-    df_X_scaled_imputed = df_X_scaled_imputed.sort_index()
-  
-  # there are missing values
-  else:
-    X_scaled = scaler.fit_transform(X) # MinMaxScaler ignores missing values
-    df_X_scaled = pd.DataFrame(X_scaled, columns = X.columns, index = X.index)
-
-    # impute missing values with median for each column, LOC features for QC-34 need imputation with 0
-    df_X_scaled_imputed = impute_features_unsupervised(df_X_scaled, file_name)
-
-    df_X_scaled_imputed  = df_X_scaled_imputed.sort_index()
-
-    # add the target column back to the scaled features to ensure that the target and input data are in the same order
-    df_X_scaled_imputed["status"] = y
-
-    # test if the order of the entries in the target column is the same after scaling and imputation
-    if df_X_scaled_imputed["status"].equals(y.sort_index()):
-      df_X_scaled_imputed = df_X_scaled_imputed.drop(columns = ["status"], axis = 1)
-
-    else:
-      print("There is an error, check the indices")
-
-  return df_X_scaled_imputed , y.sort_index()
 
 
 def worker_supervised_experiments(i, splits, model_name, features, target, file_name):
@@ -341,51 +253,6 @@ def worker_supervised_experiments(i, splits, model_name, features, target, file_
         "AUC_PR_Test": auc(recall_test, precision_test)
       
   }
-
-
-def worker_unsupervised_experiments(i, model,  features, target, file_name):
-    """
-    This function defines the task to be executed via parallel computation. The task covers the 
-    scaling and imputation of the features for training the unsupervised learning model, as well as the 
-    training and evaluation process of the unsupervised learning model.
-    Lastly, the function returns the number of the training and evaluation run, 
-    the name of the model and the computed AUC ROC and AUC PR values.
-
-    Parameters
-    -----------------
-    i: training and evaluation run
-    model: unsupervised learning model
-    features: input features
-    target: target variable
-    """
-    X = features
-    y = target
-    
-    X, y= scale_and_impute_features_unsupervised_experiments(X,y, file_name)
-
-    start_training = time.time()
-    model.fit(X)
-    end_training = time.time()
-
-    start_inference = time.time()
-    #y_proba = model.predict_proba(X)[:,1] # outputs the probability that a sample is classified as "revoked"
-    y_proba = model.decision_scores_ # outputs the score that a sample is classified as "revoked"
-    end_inference = time.time()
-
-    training_duration = end_training - start_training # seconds
-    inference_duration = end_inference - start_inference # seconds
-
-    precision, recall, _ = precision_recall_curve(y, y_proba)
-
-    return {
-        "Run": i, 
-        "Model": model.__class__.__name__,
-        "Training_Duration(s)": training_duration, 
-        "Inference Time(s)": inference_duration,
-        "AUC_ROC": roc_auc_score(y, y_proba),
-        "AUC_PR": auc(recall, precision)
-    }
-
 
 
 
