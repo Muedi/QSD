@@ -8,38 +8,9 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score, auc, precision_recall_curve
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras import layers
 from tensorflow.keras.utils import set_random_seed
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
-from sklearn.utils.class_weight import compute_sample_weight
-from sklearn.utils import class_weight
+from sklearn.ensemble import  RandomForestClassifier
 
-
-def create_ann(input_dimension):
-    """
-    This function describes the archictecture and the compiling process of our artifical neural network. 
-    
-    Parameters
-    -----------------
-    input_dimension: number of features
-    """
-
-    set_random_seed(812) # enhances reproducibility of results
-
-    model = tf.keras.models.Sequential()
-    model.add(layers.Dense(50, activation = "relu", input_dim = input_dimension, name = "InputLayer_HiddenLayer0")) 
-    model.add(layers.Dense(20, activation = "relu", name = "HiddenLayer1")) 
-    model.add(layers.Dense(10, activation = "relu", name = "HiddenLayer2")) 
-    model.add(layers.Dense(5, activation = "relu", name = "HiddenLayer3")) 
-    model.add(layers.Dense(1, activation = "sigmoid", name = "OutputLayer")) 
-
-    model.compile(loss = "binary_crossentropy",
-                optimizer = "adam",
-                metrics= [tf.keras.metrics.AUC(curve = "ROC"), tf.keras.metrics.AUC(curve = "PR")])
-    return model
 
 
 def impute_train_test_features_supervised(df_X_train_scaled, df_X_test_scaled, file_name):
@@ -194,49 +165,24 @@ def worker_supervised_experiments(i, splits, model_name, features, target, file_
 
   print(f"Split : {split},\n Y-train:{y_train.unique()},\n Y-test{y_test.unique()}\n len x train {len(X_train)}\n len x test {len(X_test)}\n len y train {len(y_train)}\n len y test {len(y_test)}")
 
-  if model_name == "logreg":
-     model = LogisticRegression(random_state = 42,max_iter = 1000) 
-  elif model_name == "rf":
+  if model_name == "rf":
       model = RandomForestClassifier(random_state = 42)
-  elif model_name =="gb":
-      model = GradientBoostingClassifier(random_state = 42)
-        
-  elif model_name == "ann":
-      model = create_ann(X_train.shape[1])
-
   else:
       raise ValueError("Unknown Model")
     
-        
-  if model_name == "ann":
 
-      start_training = time.time()
-      model.fit(X_train, y_train, epochs = 50)
-      end_training = time.time()
+  start_training = time.time()
+  model.fit(X_train, y_train)
+  end_training = time.time()
 
-      y_pred_train = model.predict(X_train).flatten()
+  y_pred_train = model.predict_proba(X_train)[:,1] # outputs the probability that a training sample is classified as "revoked"
 
-      start_inference = time.time()
-      y_pred_test= model.predict(X_test).flatten()
-      end_inference = time.time()
+  start_inference = time.time()
+  y_pred_test = model.predict_proba(X_test)[:,1] # outputs the probability that a testing sample is classified as "revoked"
+  end_inference = time.time()
 
-      training_duration = end_training - start_training # seconds
-      inference_duration = end_inference - start_inference # seconds
-    
-  else:
-
-      start_training = time.time()
-      model.fit(X_train, y_train)
-      end_training = time.time()
-
-      y_pred_train = model.predict_proba(X_train)[:,1] # outputs the probability that a training sample is classified as "revoked"
-
-      start_inference = time.time()
-      y_pred_test = model.predict_proba(X_test)[:,1] # outputs the probability that a testing sample is classified as "revoked"
-      end_inference = time.time()
-
-      training_duration = end_training - start_training # seconds
-      inference_duration = end_inference - start_inference # seconds
+  training_duration = end_training - start_training # seconds
+  inference_duration = end_inference - start_inference # seconds
 
   precision_train, recall_train, _ = precision_recall_curve(y_train, y_pred_train)
   precision_test, recall_test, _ = precision_recall_curve(y_test, y_pred_test)
