@@ -9,10 +9,10 @@ from joblib import Parallel, delayed
 tf.config.set_visible_devices([], "GPU") # disable access to GPU
 
 # load data
-file_name = "TEST/REVISION/SD_experiments/QC-34.csv"
+file_name = "QC-34.csv"
 data = pd.read_csv(file_name, header = 0, sep = ",")
 
-df_train_test = pd.read_csv(f"TEST/REVISION/by_assay_splits/splits_all.csv")
+df_train_test = pd.read_csv(f"by_assay_splits/splits_all.csv")
 
 df_train_test = df_train_test.rename(columns = {"Accession": "accession"})
 df_train_test = df_train_test.drop("Dataset", axis = 1)
