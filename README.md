@@ -2,7 +2,7 @@
 
 This repository is the official implementation of [An Imbalanced Dataset with Multiple Feature Representations for Studying Quality Control of Next-Generation Sequencing](https://arxiv.org/abs/2604.04981). 
 
-![Workflow to create the datasets](data/qsd_creation_v14 (1).jpg)
+![Workflow to create the datasets](data/qsd_creation_v14(1).jpg)
 We generate feature sets that contain quality information to predict low-quality in functional genomics files, we provide a dataset of 37,491 RNA-seq, DNAse-seq, ChIP-seq and eCLIP files. 
 We test Anomaliy-detection algorithms and compare them to supervised ML performance of identifying low quality features, based on ENCODE's *released* and *revoked* status. 
 ## Requirements
