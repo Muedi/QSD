@@ -2,7 +2,7 @@
 
 This repository is the official implementation of [An Imbalanced Dataset with Multiple Feature Representations Describing the Quality of Selected Functional Genomics Assays](https://arxiv.org/abs/2604.04981). 
 
-![Workflow to create the datasets](data/qsd_creation_v14.jpg)
+![Workflow to create the datasets](data/qsd_creation_v14_1.jpg)
 We generate feature sets that contain quality information to predict low-quality in functional genomics files, we provide a dataset of 37,491 RNA-seq, DNAse-seq, ChIP-seq and eCLIP files. 
 We validate that the proposed features are related to sample quality. Therefore, we identify *revoked* samples based on their features using Random Forest classifiers with the default hyperparameters of the Python library scikit-learn.
 
