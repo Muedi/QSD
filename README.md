@@ -26,12 +26,13 @@ The easiest and fastest way to get ready for using the feature generation pipeli
 For more details about how to use the docker image under Linux and Windows systems, we refer to the [seqQscorer README](https://github.com/salbrec/seqQscorer).
 
 ## Feature Validation
-We validate that the proposed feature sets are related to sequencing quality and identify *revoked* samples based on their features in a supervised setting. We evaluated nine BL feature sets, generated using alignment ratios ranging from 0.1 to 0.9 in 0.1 increments. Each set had between eight and 1,183 features.  Echt dot shows the performance (mean AUC ROC/mean AUC PR) of the machine learning methods in a supervised setting  after 10 runs. The square displays the performance of QC-34.
+We validate that the proposed feature sets are related to sequencing quality and identify *revoked* samples based on their features in a supervised setting. We evaluated nine BL feature sets, generated using alignment ratios ranging from 0.1 to 0.9 in 0.1 increments. Each set had between eight and 1,183 features.  Echt dot shows the performance (mean AUC ROC/mean AUC PR) of the Random Forest classifiers after 10 runs. The square displays the performance of QC-34.
 
 <p align = "center">
-  <img width="639" height="450" alt="image" src="https://github.com/user-attachments/assets/04615d2a-0333-404d-97f4-16959c869af5"/>
+  <img width="10134" height="6306" alt="feature_validation" src="https://github.com/user-attachments/assets/1d65c2a7-42cf-4a80-866c-b720d30e343e" />
 </p>
-After running the script "supervised_feature_validation.py", you will receive the performance (AUC ROC mean ± standard deviation / AUC PR mean ± standard deviation) of supervised classification algorithms for all assay types on QC-34, and BL-n.  
+After running the script "supervised_feature_validation.py", you will receive the performance (AUC ROC mean ± standard deviation / AUC PR mean ± standard deviation) of Random Forest classifiers for all assay types on QC-34, and BL-n.  
+
 
 
 
@@ -49,7 +50,8 @@ python generate_BL_dataset.py 0.1
 ```
 The lineplot serves as inspiration. It shows the relationship between alignment ratio (x-axis) and number of features (y-axis).
 
-![lineplot_ratio_features](https://github.com/user-attachments/assets/b7f99b5a-50b6-4352-9c39-f0a17dca4dbe)
+![lineplot_ratio_features](https://github.com/user-attachments/assets/b7f99b5a-5<img width="12000" height="6000" alt="lineplot_ratio_features_Nov26" src="https://github.com/user-attachments/assets/553cf2f8-53e4-48fd-a44e-0ac3d2091910" />
+
 
 
 
