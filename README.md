@@ -50,7 +50,7 @@ python generate_BL_dataset.py 0.1
 ```
 The lineplot serves as inspiration. It shows the relationship between alignment ratio (x-axis) and number of features (y-axis).
 
-![lineplot_ratio_features](https://github.com/user-attachments/assets/b7f99b5a-5<img width="12000" height="6000" alt="lineplot_ratio_features_Nov26" src="https://github.com/user-attachments/assets/553cf2f8-53e4-48fd-a44e-0ac3d2091910" />
+<img width="12000" height="6000" alt="lineplot_ratio_features_Nov26" src="https://github.com/user-attachments/assets/553cf2f8-53e4-48fd-a44e-0ac3d2091910" />
 
 
 
